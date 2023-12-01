@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 import src.sf_functions.correction_functions as sfc
 
-st.set_page_config(layout='wide')
+st.set_page_config(layout='wide',page_title = "Aggregated Data")
 st.markdown("""
     <style>
         .reportview-container {

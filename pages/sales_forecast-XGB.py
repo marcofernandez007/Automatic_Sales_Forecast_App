@@ -37,7 +37,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-st.set_page_config(layout='wide')
+st.set_page_config(layout='wide',page_title = "Sales forecast")
 st.markdown("""
     <style>
         .reportview-container {

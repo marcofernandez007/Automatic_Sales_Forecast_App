@@ -8,7 +8,9 @@ import numpy as np
 
 import src.sf_functions.correction_functions as sfc
 
-st.set_page_config(layout='wide')
+st.set_page_config(layout='wide', page_title = "Time series data")
+
+
 st.markdown("""
     <style>
         .reportview-container {

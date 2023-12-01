@@ -18,7 +18,7 @@ LOGGER = get_logger(__name__)
 
 
 st.set_page_config(
-    page_title="Welcome to the sales forecast board",
+    page_title="Home",
     #page_icon='logo.jpg',
     layout='wide'
 )
@@ -40,17 +40,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-show_pages(
-        [
-            Page("dashboard.py", "Home"),
-            Page("pages/time_series_page.py", "Time Series Data"),
-            Page("pages/aggregation_page.py", "Aggregated Data"),
-            Page("pages/seasonal_weights.py", "Seasonal Weights"),
-            Page("pages/map_heatmap_page.py", "Map"),
-            Page("pages/sales_forecast-XGB.py", "Sales Forecast")
-
-        ]
-) 
+#show_pages(
+#        [
+#            Page("dashboard.py", "Home"),
+#            Page("pages/time_series_page.py", "Time Series Data"),
+#            Page("pages/aggregation_page.py", "Aggregated Data"),
+#            Page("pages/seasonal_weights.py", "Seasonal Weights"),
+#            Page("pages/map_heatmap_page.py", "Map"),
+#            Page("pages/sales_forecast-XGB.py", "Sales Forecast")
+#
+#        ]
+#) 
 
     
   
