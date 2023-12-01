@@ -2,4 +2,4 @@
 Sales Forecast Project for SPICED Academy
 
 Streamlit dashboard:
-https://automaticsalesforecastapp-3qj4pbz28ynnckeo5xkyzs.streamlit.app/
+https://automatic-sales-forecast-app.streamlit.app/
