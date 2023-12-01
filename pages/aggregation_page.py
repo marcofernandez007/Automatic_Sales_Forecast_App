@@ -104,7 +104,7 @@ def aggregation_page():
     
     if selected_skus:
         if selected_option =='Daily':
-            df_time =pd.read_csv('../data/all_months_for_python.csv').sort_values('buy_time')
+            df_time =pd.read_csv('data/all_months_for_python.csv').sort_values('buy_time')
             df_time = sfc.date_unwind(df_time, 'buy_date')
             df_time = df_time[df_time['sku'].isin(selected_skus)]
             df_time['buy_time'] = pd.to_timedelta(df_time['buy_time'])

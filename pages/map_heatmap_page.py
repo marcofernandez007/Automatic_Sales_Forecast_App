@@ -113,7 +113,7 @@ def map_heatmap_page():
         'CL': 'Chile', 'GP': 'Guadeloupe', 'GB': 'United Kingdom', 'IE': 'Ireland'
     }
     #Load the data and prepare the format
-    df_map = pd.read_csv('../data/all_months_for_python.csv')
+    df_map = pd.read_csv('data/all_months_for_python.csv')
     df_map = df_map[df_map['sku'].isin(skus)]
 
     df_map['country']=df_map['country'].replace(country_code_mapping)

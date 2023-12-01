@@ -1,4 +1,4 @@
-# Copyright (c) we
+# Copyright (c) Karol Palczynski, Hanna Schaumberger, Fanxing Xi, Hiroi Isomura
 
 import streamlit as st
 from streamlit.logger import get_logger
@@ -40,7 +40,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+show_pages(
+        [
+            Page("dashboard.py", "Home"),
+            Page("pages/time_series_page.py", "Time Series Data"),
+            Page("pages/aggregation_page.py", "Aggregated Data"),
+            Page("pages/seasonal_weights.py", "Seasonal Weights"),
+            Page("pages/map_heatmap_page.py", "Map"),
+            Page("pages/sales_forecast-XGB.py", "Sales Forecast")
 
+        ]
+) 
 
     
   
@@ -55,10 +65,10 @@ def run():
     selected_family = st.sidebar.selectbox('Which product family do you want?',families)
 
     if selected_family=='A': 
-        df=pd.read_csv('../data/A_Final.csv')
+        df=pd.read_csv('data/A_Final.csv')
 
     if selected_family=='B':
-        df=pd.read_csv('../data/B_Final.csv')
+        df=pd.read_csv('data/B_Final.csv')
 
         
     df.sort_values(['date', 'sku'], inplace=True) # sort by date and sku
@@ -163,21 +173,5 @@ def run():
 if __name__ == "__main__":
     run()
     
-    from st_pages import Page, show_pages, add_page_title
+    
 
-        # Optional -- adds the title and icon to the current page
-    #add_page_title()
-
-        # Specify what pages should be shown in the sidebar, and what their titles 
-        # and icons should be
-    show_pages(
-            [
-                Page("dashboard.py", "Home"),
-                Page("pages/time_series_page.py", "Time Series Data"),
-                Page("pages/aggregation_page.py", "Aggregated Data"),
-                Page("pages/seasonal_weights.py", "Seasonal Weights"),
-                Page("pages/map_heatmap_page.py", "Map"),
-                Page("pages/sales_forecast-XGB.py", "Sales Forecast")
-
-            ]
-    )  
