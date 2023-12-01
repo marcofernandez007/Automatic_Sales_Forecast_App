@@ -23,21 +23,18 @@ def stockout_correction(df):
     df_raw=df.copy()
     for sku in df_raw['sku'].unique().tolist():
         sku_condition = df_raw['sku'] == sku
-    #df_1 = df[sku_condition].reset_index()
+
         df_raw.loc[sku_condition, 'stockout_group'] = ((df_raw.loc[sku_condition, 'stockout'] == 0) | ( df_raw.loc[sku_condition, 'stockout'].shift() == 0)).cumsum()
-    #print(df[df['sku']==sku]['stockout_group'])
-        stockout_durations = df_raw[sku_condition].groupby(['stockout_group'])['date'].agg(['min', 'max'])#.reset_index()
+
+        stockout_durations = df_raw[sku_condition].groupby(['stockout_group'])['date'].agg(['min', 'max'])
         stockout_durations['duration'] = (stockout_durations['max'] - stockout_durations['min']).dt.days + 1
-        #print(stockout_durations)
+
         df_raw.loc[sku_condition, 'duration'] = df_raw.loc[sku_condition, 'stockout_group'].map(stockout_durations['duration'])
         df_raw.loc[(sku_condition) & (df_raw['duration'] > 7) , 'long_stockout'] = 1
 
     df_raw['long_stockout'] = df_raw['long_stockout'].fillna(0).astype(int) 
 
-    
 
-        
-        
         
     for sku in df_raw['sku'].unique().tolist():
         sku_condition = df_raw['sku'] == sku
@@ -94,13 +91,7 @@ def stockout_correction(df):
         df_0.loc[(df_0['sku']==sku) & (df_0['stockout']!=0) & (~df_0['long_stockout']==1), 'sales']=df_0.groupby('month_year')['sales'].transform('mean')
 
 
-        
-        
-        
-        
-        
-        
-    
+
     return df_0
 
 
@@ -120,15 +111,8 @@ def stock_sales_correction(df):
         df_1['sales_new']=df_1['sales'].fillna(df_1.groupby('month_year')['sales'].transform('mean'))
         
         
-        
-        
-       
-        
-        df_raw.loc[df_raw['sku'] == sku, 'sales'] = df_1['sales_new']#.values    
-        #df[df < 0] = 0
-        
-        
-        
+        df_raw.loc[df_raw['sku'] == sku, 'sales'] = df_1['sales_new'] 
+
     return df_raw 
 
 
@@ -159,25 +143,17 @@ def price_sales_correction(df):
     df_ret=df.copy()
     for sku in  df_raw['sku'].unique():
         sku_data = df_raw[df_raw['sku'] == sku]        
-        df_temp = sku_data #date_unwind(sku_data[['date', 'sales', 'price_de', 'stock']], 'date')[['month_year', 'price_de', 'sales']]
+        df_temp = sku_data 
         
         model_ols = sm.OLS(df_temp['sales'], sm.add_constant(df_temp['price_de']), missing='drop')
         results = model_ols.fit()
         s = results.params['price_de'] 
         
-        #for i in range(0,len(sku_data['price_de'])):
-        #    if not np.isnan(sku_data['price_de'].iloc[i]):
-        #        break
-        
-        #print(i)
-        
-        #df['sales_correction'] = (df['price_de'] - df['price_de'].iloc[i]) * s
-        
         df_temp['sales_correction'] = (df_temp['price_de'] - df_temp['price_de'].mode()[0]) * s
         df_temp['price_corrected_sales'] = df_temp['sales'] - df_temp['sales_correction']        # Merge the corrected sales back to the original dataframe
-        #st.write(s)
-        df_raw.loc[df_raw['sku'] == sku, 'price_corrected_sales'] = df_temp['price_corrected_sales']#.values    
-        #df[df < 0] = 0
+
+        df_raw.loc[df_raw['sku'] == sku, 'price_corrected_sales'] = df_temp['price_corrected_sales'] 
+
         df_raw['price_corrected_sales'][df_raw['price_corrected_sales']<0]=0
         df_raw['price_corrected_sales'][(df_raw['sales']==0) & (df_raw['price_de'].isna())]=0
         df_raw['price_corrected_sales'][(df_raw['sales']>0) & (df_raw['price_de'].isna())]=df_raw['sales']
@@ -193,8 +169,6 @@ def special_days_correction(df):
         average_sales_sku =df_raw[df_raw['sku'] == sku].groupby('month_year')['sales'].mean().reset_index()
         average_sales_sku.rename(columns={'sales': f'{sku}'}, inplace=True)
         monthly_average = pd.merge(monthly_average, average_sales_sku, on='month_year', how='outer')
-        #if not pd.isna(monthly_average[monthly_average['month_year'] == '2021-11'][sku].values[0]):
-               # df_raw.loc[df_raw[(df['sku'] == sku) & ((df_raw['date'] == '2021-11-26') | (df_raw['date'] == '2021-11-27') | (df_raw['date'] == '2021-11-28') | (df_raw['date'] == '2021-11-29'))].index, 'sales'] = monthly_average[monthly_average['month_year'] == '2021-11'][sku].values[0]
         if not pd.isna(monthly_average[monthly_average['month_year'] == '2022-07'][sku].values[0]):
                 df_raw.loc[df_raw[(df['sku'] == sku) & ((df_raw['date'] == '2022-07-12') | (df_raw['date'] == '2022-07-13'))].index, 'sales'] = monthly_average[monthly_average['month_year'] == '2022-07'][sku].values[0]
         if not pd.isna(monthly_average[monthly_average['month_year'] == '2022-11'][sku].values[0]):
@@ -207,35 +181,27 @@ def corrections(df):
 
     st.sidebar.markdown("**Apply corrections to data**")
     
-    switch_stockout_correction = st.sidebar.checkbox('Stock-out correction', help='At days with stock-outs, the sales number is imputed by the average daily sales of the month.')
+    switch_stockout_correction = st.sidebar.checkbox('Stock-out correction', help='At periods with stock-outs the sales numbers are imputed with data from the same month of the next available different year & rescaled by the monthly average.')
     if switch_stockout_correction: 
         df = stockout_correction(df)
-        #df = stock_sales_correction(df)
         st.session_state['key'] = 1
 
-        # Read session state
-        #st.write(st.session_state['key'])
-
-    
-    switch_new_product_correction = st.sidebar.checkbox('New-product-correction', help='Remove products from the selection and add their sales to the remaining products.')
-
-    if switch_new_product_correction:
-        skus_new = ['K-HP-S-CR', 'K-HP-L-G', 'K-HP-S-B']
-        #selected_new_skus = st.sidebar.multiselect('Which skus are removed?',skus_new)
-        df = new_product_correction(df, skus_new)
-        st.session_state['key'] = 1
-    
+    #switch_new_product_correction = st.sidebar.checkbox('New-product-correction', help='Remove products from the selection and add their sales to the remaining products.')
+    #
     #if switch_new_product_correction:
     #    skus = df['sku'].unique().tolist()
     #    selected_new_skus = st.sidebar.multiselect('Which skus do you want to remove?',skus)
     #    df = new_product_correction(df, selected_new_skus)
-        
+    #    st.session_state['key'] = 1   
+    
     switch_price_sales_correction = st.sidebar.checkbox('Price vs. sales correction', help='Remove the effect of price-changes from the sales numbers. I.e. a linear relationship between price and sales is assumend and the sales numbers are scaled by the factor "(current sales number)/(average sales number for the most frequent price)"')
     if switch_price_sales_correction: 
         df = price_sales_correction(df)
         st.session_state['key'] = 1
+        
     switch_special_days_correction = st.sidebar.checkbox('Sale days correction', help='Remove the effect of sales days (Black Friday, Prime days etc.) from the sales by imputing the sales on these days with the daily average of the month.')
     if switch_special_days_correction:
         df = special_days_correction(df)
         st.session_state['key'] = 1
+        
     return df
