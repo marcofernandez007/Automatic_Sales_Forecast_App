@@ -7,9 +7,13 @@ statsmodels==0.13.5
 scikit-learn==1.2.2
 pydot
 protobuf
-tensorflow-macos
-tensorflow-metal
+plotly==5.3.1
 Keras
+tensorflow
 tensorflow-hub
 tensorflow-docs
-plotly==5.3.1
+xgboost==1.7.5
+streamlit
+streamlit_folium 
+geopandas
+st_pages
