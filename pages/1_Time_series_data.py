@@ -38,7 +38,7 @@ def time_series_page():
     
     st.sidebar.markdown("**Select product(s)**")
 
-    skus = df['sku'].unique().tolist()
+    skus = sorted(df['sku'].unique().tolist())
     
     # SKU filter
     select_all = st.sidebar.checkbox('Select all products')
@@ -227,7 +227,7 @@ def time_series_page():
                         #Country filter
                    # if selected_countries: 
                         df['country'].fillna('DE', inplace=True)
-                        country = df['country'].unique().tolist()
+                        country = sorted(df['country'].unique().tolist())
                         all_countries = st.checkbox("Select all countries", value=True)
                         if not all_countries:
                             selected_countries = st.multiselect("**Select country**", country)

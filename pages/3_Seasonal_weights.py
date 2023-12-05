@@ -207,7 +207,7 @@ def seasonal_weights():
     
     st.sidebar.markdown("**Select product(s)**")
     
-    skus = df['sku'].unique().tolist()
+    skus = sorted(df['sku'].unique().tolist())
     
     
     select_all = st.sidebar.checkbox('Select all products')

@@ -63,7 +63,8 @@ def stockout_correction(df):
         d22['trend2']=d23['trend']
         d22 = d22.set_index('index')
         #d22['sales']=d22['newsales']- (d22['trend2']-d22['trend'])
-        d22['sales']=d22['newsales']/ (d22['trend2']/d22['trend'])
+        #d22['sales']=d22['newsales']/ (d22['trend2']/d22['trend'])
+        d22['sales']=d22['newsales'] * (d22['trend']/d22['trend2'])
         df_raw.loc[sku_condition & long_stockout_condition & before_nov_2022_condition, 'sales']=d22['sales']
 
         
@@ -84,7 +85,8 @@ def stockout_correction(df):
         d22b['trend2']=d23b['trend']
         d22b = d22b.set_index('index')
         #d22b['sales']=d22b['newsales']- (d22b['trend2']-d22b['trend'])
-        d22b['sales']=d22b['newsales']/ (d22b['trend2']/d22b['trend'])
+        #d22b['sales']=d22b['newsales']/ (d22b['trend2']/d22b['trend'])
+        d22b['sales']=d22b['newsales']* (d22b['trend']/d22b['trend2'])
         df_raw.loc[sku_condition & long_stockout_condition & ~before_nov_2022_condition, 'sales']=d22b['sales']
         
         

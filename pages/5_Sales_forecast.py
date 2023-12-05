@@ -59,7 +59,7 @@ def get_data():
 
     st.sidebar.markdown("**Select product(s)**")
     
-    skus = df['sku'].unique().tolist()
+    skus = sorted(df['sku'].unique().tolist())
     
     
     select_all = st.sidebar.checkbox('Select all products')
@@ -148,8 +148,8 @@ def XGB_model(dfa,start_date_train,end_date_train,start_date_predict,end_date_pr
     # Add lagged sales feature (does not necessarily improve the forecast)
     #target_map = df_sku.set_index('date')['sales'].to_dict()
     #df_sku['sales_lag90']=(df_sku.set_index('date').index - pd.Timedelta('90 days')).map(target_map) 
-    df_sku['sales_lag90']=df_sku['sales'].shift(90)
-    df_sku['stock_lag90']=df_sku['stock'].shift(90)
+    #df_sku['sales_lag90']=df_sku['sales'].shift(90)
+    #df_sku['stock_lag90']=df_sku['stock'].shift(90)
 
 
     # Train-test split 

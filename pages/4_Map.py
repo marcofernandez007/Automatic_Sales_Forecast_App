@@ -24,7 +24,7 @@ st.markdown("""
 
 def map_heatmap_page():
     df = st.session_state.df
-    skus = df['sku'].unique().tolist()
+    skus = sorted(df['sku'].unique().tolist())
 
     # Load the world map data
     world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
@@ -132,7 +132,7 @@ def map_heatmap_page():
     num_days = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days
 
     ###Select the product(sku) for the heatmap
-    options_sku = df['sku'].unique().tolist()
+    options_sku = sorted(df['sku'].unique().tolist())
     select_all = st.sidebar.checkbox('Select all products')
     if not select_all:
         selected_skus = st.sidebar.multiselect('Which product do you want?',options_sku)
