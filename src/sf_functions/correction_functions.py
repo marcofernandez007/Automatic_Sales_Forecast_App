@@ -62,7 +62,8 @@ def stockout_correction(df):
         d22['newsales']=d23['sales']
         d22['trend2']=d23['trend']
         d22 = d22.set_index('index')
-        d22['sales']=d22['newsales']- (d22['trend2']-d22['trend'])
+        #d22['sales']=d22['newsales']- (d22['trend2']-d22['trend'])
+        d22['sales']=d22['newsales']/ (d22['trend2']/d22['trend'])
         df_raw.loc[sku_condition & long_stockout_condition & before_nov_2022_condition, 'sales']=d22['sales']
 
         
@@ -82,14 +83,15 @@ def stockout_correction(df):
         d22b['newsales']=d23b['sales']
         d22b['trend2']=d23b['trend']
         d22b = d22b.set_index('index')
-        d22b['sales']=d22b['newsales']- (d22b['trend2']-d22b['trend'])
+        #d22b['sales']=d22b['newsales']- (d22b['trend2']-d22b['trend'])
+        d22b['sales']=d22b['newsales']/ (d22b['trend2']/d22b['trend'])
         df_raw.loc[sku_condition & long_stockout_condition & ~before_nov_2022_condition, 'sales']=d22b['sales']
         
         
     for sku in  df_raw['sku'].unique().tolist():
         df_0=df_raw.copy()
         df_0.loc[(df_0['sku']==sku) & (df_0['stockout']!=0) & (~df_0['long_stockout']==1), 'sales']=df_0.groupby('month_year')['sales'].transform('mean')
-
+        df_0['sales'][df_0['sales']<0]=0
 
 
     return df_0
