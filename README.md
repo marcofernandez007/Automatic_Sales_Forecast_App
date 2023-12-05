@@ -3,10 +3,6 @@
 This is an application for analyzing and forecasting future product sales based on historical sales numbers within the context of e-commerce.
 The app uses the [XGBoost model](https://xgboost.readthedocs.io/en/stable/)
 
-```
-aaa
-```
-
 Once you have installed all required packages 
 
 ```
