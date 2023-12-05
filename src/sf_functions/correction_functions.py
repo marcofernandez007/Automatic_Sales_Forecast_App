@@ -14,7 +14,8 @@ def date_unwind(df, datecol):
     df['day_num'] = df[datecol].dt.dayofweek+1
     df['day_of_year'] = df[datecol].dt.dayofyear
     df['month_year'] = df[datecol].dt.to_period('M')
-    df['week'] = df[datecol].dt.isocalendar().week.astype('int')
+    if datecol !='month_year': 
+        df['week'] = df[datecol].dt.isocalendar().week.astype('int')
     return df
 
 
